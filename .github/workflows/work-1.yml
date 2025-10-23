@@ -10,7 +10,7 @@ on:
     branches:
       - main
 jobs:
-  makeTagAndRelease:
+  makeTag:
     runs-on: ubuntu-latest
     outputs:
       tag_name: ${{ steps.create_tag.outputs.new_tag }}
@@ -34,7 +34,7 @@ jobs:
           prerelease: false
   buildImageAndPush:
     name: 도커 이미지 빌드와 푸시
-    needs: makeTagAndRelease
+    needs: makeTag
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,5 +57,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/deploy:${{ needs.makeTagAndRelease.outputs.tag_name }},
+            ghcr.io/${{ env.OWNER_LC }}/deploy:${{ needs.makeTag.outputs.tag_name }},
             ghcr.io/${{ env.OWNER_LC }}/deploy:latest
